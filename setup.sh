@@ -26,11 +26,11 @@ apt update
 apt install -y curl wget unzip git
 
 # 3. System Locale
-echo "🌍 [2/8] Generating Persian & English Locales..."
+echo "🌍 [2/8] Generating Persian Locale (fa_IR)..."
 # Enable fa_IR in locale.gen
 sed -i '/^# fa_IR.UTF-8 UTF-8/s/^# //' /etc/locale.gen
-# Explicitly generate both to ensure stability
-locale-gen fa_IR.UTF-8 en_CA.UTF-8
+# This command forces the generation of both
+locale-gen fa_IR.UTF-8
 echo "✅ Locales generated."
 
 # 4. Modern Fonts
