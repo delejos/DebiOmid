@@ -23,14 +23,14 @@ echo "-----------------------------------------------------------"
 # 2. Prerequisites
 echo "🔍 [1/8] Updating repositories and installing tools..."
 apt update
-apt install -y curl wget unzip git
+apt install -y curl wget unzip git locales im-config
 
 # 3. System Locale
 echo "🌍 [2/8] Generating Persian Locale (fa_IR)..."
 # Enable fa_IR in locale.gen
 sed -i '/^# fa_IR.UTF-8 UTF-8/s/^# //' /etc/locale.gen
-# This command forces the generation of both
-locale-gen fa_IR.UTF-8
+# Generate locales (this will refresh all enabled locales)
+locale-gen
 echo "✅ Locales generated."
 
 # 4. Modern Fonts
@@ -50,6 +50,9 @@ QT_IM_MODULE=fcitx
 XMODIFIERS=@im=fcitx
 EOF
 
+# Use im-config to set fcitx5 as the system default (The Debian Way)
+im-config -n fcitx5
+
 # 6. Desktop Specific Tweaks
 DESKTOP_ENV=$XDG_CURRENT_DESKTOP
 
@@ -61,13 +64,15 @@ if [[ "$DESKTOP_ENV" == *"GNOME"* ]]; then
 
 elif [[ "$DESKTOP_ENV" == *"KDE"* ]]; then
     echo "🎨 [5/8] KDE Plasma 6 detected. Setting Jalali Calendar..."
-    # Configures the Plasma 6 digital clock for the current user
-    if [ -n "$SUDO_USER" ]; then
-        su - $SUDO_USER -c "kwriteconfig6 --file kdeglobals --group Locale --key CalendarSystem persian"
+    # Configures the Plasma 6 digital clock for the current user safely
+    if command -v kwriteconfig6 >/dev/null 2>&1; then
+        if [ -n "$SUDO_USER" ]; then
+            su - $SUDO_USER -c "kwriteconfig6 --file kdeglobals --group Locale --key CalendarSystem persian"
+            echo "✅ KDE Calendar set to Persian."
+        fi
     else
-        kwriteconfig6 --file kdeglobals --group Locale --key CalendarSystem persian
+        echo "⚠️ kwriteconfig6 not found. Skipping KDE clock config."
     fi
-    echo "✅ KDE Calendar set to Persian."
 fi
 
 # 7. App Localization
@@ -84,6 +89,6 @@ echo "-----------------------------------------------------------"
 echo "🎉 Setup Complete! / عملیات با موفقیت انجام شد"
 echo "-----------------------------------------------------------"
 echo "1. Please Logout and Login again (or Restart)."
-echo "2. Open 'Fcitx5 Configuration' to add the Persian layout."
+echo "2. Open 'Fcitx5 Configuration' to add the Persian (m17n) layout."
 echo "3. Use Alt+Shift to switch languages."
 echo "-----------------------------------------------------------"
