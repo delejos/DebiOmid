@@ -45,8 +45,7 @@ apt install -y fonts-vazirmatn fonts-vazirmatn-variable fonts-noto-core fonts-fr
 # 5. Input Method (Fcitx5)
 echo "⌨️ [4/8] Setting up Fcitx5 for modern Persian typing..."
 echo "در حال نصب و تنظیم سیستم ورودی Fcitx5..."
-apt install -y fcitx5 fcitx5-farsi fcitx5-config-qt fcitx5-frontend-gtk3 fcitx5-frontend-qt6
-
+apt install -y fcitx5 fcitx5-chinese-addons fcitx5-config-qt fcitx5-frontend-gtk3 fcitx5-frontend-qt6
 # Configure environment variables so Fcitx5 works in all apps
 cat <<EOF > /etc/environment
 GTK_IM_MODULE=fcitx
