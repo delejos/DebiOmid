@@ -26,7 +26,7 @@ apt install -y curl wget unzip git
 
 # 3. System Locale
 echo "🌍 [2/8] Generating Persian & English Locales..."
-# Uncommenting both Persian and English (CA) for consistency
+# This ensures fa_IR and en_CA are both ready to use
 sed -i '/^# fa_IR.UTF-8 UTF-8/s/^# //' /etc/locale.gen
 sed -i '/^# en_CA.UTF-8 UTF-8/s/^# //' /etc/locale.gen
 locale-gen
@@ -34,12 +34,11 @@ echo "✅ Locales generated."
 
 # 4. Modern Fonts
 echo "🔤 [3/8] Installing Farsi fonts (Vazirmatn & Noto Arabic)..."
-# fonts-noto-arabic provides specific glyph shaping for Persian
 apt install -y fonts-vazirmatn fonts-vazirmatn-variable fonts-noto-core fonts-noto-arabic fonts-freefarsi
 
 # 5. Input Method (Fcitx5)
 echo "⌨️ [4/8] Setting up Fcitx5..."
-# fcitx5-m17n is the standard for Persian layouts in Debian
+# fcitx5-m17n provides the most standard Persian keyboard layouts
 apt install -y fcitx5 fcitx5-m17n fcitx5-config-qt fcitx5-frontend-gtk3 fcitx5-frontend-qt6
 
 cat <<EOF > /etc/environment
@@ -52,9 +51,10 @@ EOF
 DESKTOP_ENV=$XDG_CURRENT_DESKTOP
 
 if [[ "$DESKTOP_ENV" == *"GNOME"* ]]; then
-    echo "🎨 [5/8] GNOME detected. Installing Extension Manager..."
-    apt install -y gnome-shell-extension-manager
-    echo "💡 Hint: Open 'Extension Manager' later and search for 'Jalali'."
+    echo "🎨 [5/8] GNOME detected. Preparing Extension Manager..."
+    # We install the Manager and the Connector for browser support
+    apt install -y gnome-shell-extension-manager gnome-browser-connector
+    echo "💡 Note: The Jalali package is no longer in apt. Use 'Extension Manager' to install it."
 
 elif [[ "$DESKTOP_ENV" == *"KDE"* ]]; then
     echo "🎨 [5/8] KDE Plasma 6 detected. Setting Jalali Calendar..."
