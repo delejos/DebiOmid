@@ -25,20 +25,19 @@ apt update
 apt install -y curl wget unzip git
 
 # 3. System Locale
-echo "🌍 [2/8] Generating Persian & English Locales..."
-# This ensures fa_IR and en_CA are both ready to use
+echo "🌍 [2/8] Generating Persian Locale (fa_IR)..."
 sed -i '/^# fa_IR.UTF-8 UTF-8/s/^# //' /etc/locale.gen
-sed -i '/^# en_CA.UTF-8 UTF-8/s/^# //' /etc/locale.gen
-locale-gen
-echo "✅ Locales generated."
+locale-gen fa_IR.UTF-8 en_CA.UTF-8
+echo "✅ Locale generated."
 
 # 4. Modern Fonts
-echo "🔤 [3/8] Installing Farsi fonts (Vazirmatn & Noto Arabic)..."
-apt install -y fonts-vazirmatn fonts-vazirmatn-variable fonts-noto-core fonts-noto-arabic fonts-freefarsi
+echo "🔤 [3/8] Installing Farsi fonts (Vazirmatn & Noto)..."
+# Changed to fonts-noto-core for Debian 13 compatibility
+apt install -y fonts-vazirmatn fonts-vazirmatn-variable fonts-noto-core fonts-freefarsi
 
 # 5. Input Method (Fcitx5)
 echo "⌨️ [4/8] Setting up Fcitx5..."
-# fcitx5-m17n provides the most standard Persian keyboard layouts
+# Changed fcitx5-farsi to fcitx5-m17n for Debian 13 compatibility
 apt install -y fcitx5 fcitx5-m17n fcitx5-config-qt fcitx5-frontend-gtk3 fcitx5-frontend-qt6
 
 cat <<EOF > /etc/environment
@@ -51,19 +50,17 @@ EOF
 DESKTOP_ENV=$XDG_CURRENT_DESKTOP
 
 if [[ "$DESKTOP_ENV" == *"GNOME"* ]]; then
-    echo "🎨 [5/8] GNOME detected. Preparing Extension Manager..."
-    # We install the Manager and the Connector for browser support
-    apt install -y gnome-shell-extension-manager gnome-browser-connector
-    echo "💡 Note: The Jalali package is no longer in apt. Use 'Extension Manager' to install it."
+    echo "🎨 [5/8] GNOME detected. Installing Extension Manager..."
+    # Removed missing jalali-calendar package; users will use Extension Manager
+    apt install -y gnome-shell-extension-manager
+    echo "💡 Hint: Open 'Extension Manager' later and search for 'Jalali'."
 
 elif [[ "$DESKTOP_ENV" == *"KDE"* ]]; then
     echo "🎨 [5/8] KDE Plasma 6 detected. Setting Jalali Calendar..."
-    if command -v kwriteconfig6 >/dev/null 2>&1; then
-        if [ -n "$SUDO_USER" ]; then
-            su - $SUDO_USER -c "kwriteconfig6 --file kdeglobals --group Locale --key CalendarSystem persian"
-        else
-            kwriteconfig6 --file kdeglobals --group Locale --key CalendarSystem persian
-        fi
+    if [ -n "$SUDO_USER" ]; then
+        su - $SUDO_USER -c "kwriteconfig6 --file kdeglobals --group Locale --key CalendarSystem persian"
+    else
+        kwriteconfig6 --file kdeglobals --group Locale --key CalendarSystem persian
     fi
 fi
 
