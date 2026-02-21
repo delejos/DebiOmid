@@ -17,8 +17,7 @@ A professional post-install script to perfectly localize Debian 13 (Trixie) for 
 ## Installation
 Run the following one-liner on a fresh Debian 13 install:
 
-bash
-wget -O- [https://raw.githubusercontent.com/delejos/DebiOmid/main/setup.sh](https://raw.githubusercontent.com/delejos/DebiOmid/main/setup.sh) | sudo bash
+wget -O- https://raw.githubusercontent.com/delejos/DebiOmid/main/setup.sh | sudo bash
 
 ---
 
@@ -53,7 +52,7 @@ This project is licensed under the MIT License.
 
 دستور زیر را در ترمینال دبیان ۱۳ اجرا کنید:
 
-bash
+
 wget -O- [https://raw.githubusercontent.com/delejos/DebiOmid/main/setup.sh](https://raw.githubusercontent.com/delejos/DebiOmid/main/setup.sh) | sudo bash
 ## مراحل نهایی پس از نصب
 
